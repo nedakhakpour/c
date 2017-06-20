@@ -1,0 +1,199 @@
+// Author:       Neda Khakpour
+// Course:       CS-1337-OU1
+// Date:         6/20/2017
+// Assignment:   Lecture Homework #3 Exercise #2
+// Compiler:     Visual Studio C++ 2017
+
+// Description:Read data from the file "Random Sort. txt" into a data array. A pointer array is also created and initialized in a way that 
+// points to each element of the data array. The data array is displayed to show the original version. THE pointer array of the same size,
+// will be then sorted through a bubble sort and displayed on the console. The data array is maintained, and displayed on the console.
+
+
+#include "stdafx.h"
+#include <iostream>
+#include <conio.h>
+#include <fstream>
+#include <string>
+#include <iomanip>
+#include <array>
+
+using namespace std;
+
+//define array size constant element of size 150
+const int ARRAY_SIZE = 150; 
+
+//declare function prototypes
+void displayArray(int dataArray[], int size);
+void displayArray(int *pointerArray[], int size);
+void bubbleSort(int *pointerArray[], int size);
+void swap(int **int1, int **int2);
+
+
+int main()
+{
+	//declare variables
+	int * dataArray;							//create data array
+	dataArray = new int[ARRAY_SIZE];			//dynammically allocate with 'new' keyword
+	int ** pointerArray;						//create pointer array	
+	pointerArray = new int*[ARRAY_SIZE];		//dynammically allocate with 'new' keyowrd
+	int count = 0;								//counter for traversing through the file
+	string fileName = "Random Sort.txt";		//name of the file
+
+	for (int i = 0; i < ARRAY_SIZE; i++) 
+	{
+		dataArray[i] = 0;    
+	} //Initialize dataArray to 0
+
+
+	//open the file
+	ifstream inFile(fileName);
+
+	if (!inFile)
+	{
+		cout << "Unable to open the file!";
+		return 0;
+	} //if not in the file, end the program with a message "Unable to open the file"
+
+	
+	while(count < ARRAY_SIZE && inFile >> dataArray[count])
+	{
+		count++;
+	} //read file into dataArray with while loop checking if count is less than array size and putting the input into the array
+
+	inFile.close(); //close the file
+
+	for (int x = 0; x <= ARRAY_SIZE; x++)
+	{
+		pointerArray[x] = &dataArray[x];
+	} //initialize pointerArray by placing the refernce of dataArray at index x into pointerArray at index x
+
+	//call displayArray function to show original dataArray (one of two overloaded functions)
+	cout << "Now displaying data in the original order...\n\n";
+	displayArray(dataArray, ARRAY_SIZE);	
+
+	//call bubblesort function to sort the pointerArray
+	bubbleSort(pointerArray, ARRAY_SIZE);	
+	cout << "\n\n";
+
+	//call the displayArray method to display the sorted array (one of two overloaded functions)
+	cout << "Now displaying data in sorted order...\n\n";
+	displayArray(pointerArray, ARRAY_SIZE);
+	
+	//call the displayArray method to display the maintained array (one of two overloaded functions)
+	cout << "\n\nNow displaying data in the original order...\n\n";
+	displayArray(dataArray, ARRAY_SIZE);
+	
+
+	//prevent console from closing
+	cout << "\n\nPress any key to continue...";
+	_getch();
+	return 0;
+}
+
+/****************************************************************************
+* Function: void displayArray(int arr[], int size)
+* Descr: This is one of two overloaded functions. This function displays the content of array 'arr', 10 numbers per line, each number right justified 
+* in a 6 byte field. This is achieved by interating through the array in a for loop, and checking if the array at index i is not 0 and less than or equal 
+* to the array size. If so, it will cout the contents of the array. Another if statement is used to check if the numbers per line, using index i 
+* against modulus 10. If i % 10 equals 9, then the 10 numbers per line condition is met, and a new line is printed. The array output is displayed on the console.
+* Input: int arr[] and int size
+* Return: output of the given array
+****************************************************************************/
+void displayArray(int arr[], int size)
+{
+	for (int i = 0; i < ARRAY_SIZE; i++)
+	{
+		if (arr[i] != 0 && i <= ARRAY_SIZE)
+		{
+			cout << right << setw(6) << arr[i] << " ";
+
+			if ((i % 10) == 9)
+			{
+				cout << endl;
+			} //if i modulus 10 equals 9, end line
+
+		} //if array value is not 0 and of i is less than or equal to array size, cout the array
+
+		
+
+	} //for loop to interate through the array
+}
+
+/****************************************************************************
+* Function: void displayArray(int *arr[], int size)
+* Descr: This is one of two overloaded functions that displays the content of pointer array 'arr', 10 numbers per line, each number right justified 
+* in a 6 byte field. This is achieved by interating through the array in a for loop, and checking if the array at index i is not 0 and less than or 
+* equal to the array size. If so, it will cout the contents of the array. Another if statement is used to check if the numbers per line, using index 
+* i against modulus 10. If i % 10 equals 9, then the 10 numbers per line condition is met, and a new line is printed. The array output is displayed 
+* on the console.
+* Input: int *arr[] and int size
+* Return: output of the given pointer array
+****************************************************************************/
+void displayArray(int *arr[], int size)
+{
+	for (int i = 0; i < ARRAY_SIZE; i++)
+	{
+		if (*arr[i] != 0 && i <= ARRAY_SIZE)
+		{
+			cout << right << setw(6) << *arr[i] << " ";
+
+			if ((i % 10) == 9)
+			{
+				cout << endl;
+			} //if i modulus 10 equals 9, end line
+
+		} //if array value is not 0 and of i is less than or equal to array size, cout the array
+
+
+	} //for loop to interate through the array
+}
+
+
+
+/****************************************************************************
+* Function: void bubbleSort(int *arr[], int size)
+* Descr: This function executes the bubble sort algorithm on pointer array 'arr' in ascending order. This is achieved by setting a do while loop to interate 
+* through the array using a for loop. In the for loop, it verifies if the pointer at count is greater than the pointer at count + 1 in the pointer array. 
+* If so, it swaps the elements using the swap method, and sets the flag to true. It continues to sort the array until completed. 
+* Input: int *arr[], and int size
+* Return: sorted pointer array
+****************************************************************************/
+void bubbleSort(int *pointerArray[], int size)
+{
+	bool swaps;		//flag to show it swapped
+
+	do
+	{
+		swaps = false;
+		for (int count = 0; count < (size - 1); count++)
+		{
+			if (*pointerArray[count] > *pointerArray[count + 1])
+			{
+				//call swap method to swap elements of the array
+				swap(pointerArray[count], pointerArray[count + 1]);
+				//set flag to true
+				swaps = true;
+			}
+
+		}
+	} while (swaps); //do while loop to swap elements while flag is false	
+	
+}
+
+
+/****************************************************************************
+* Function: void swap(int **int1, int **int2)
+* Descr: This function will swap two given pointers to pointers arguments. This is achieved by setting a pointer temp value equal to **int1. Changing the value
+* of **int1 into **int2. Then changing **int2 into the value of temp.
+* Input: pointers to pointers parameters of int 1 and int 2
+* Return: the swapped arguments
+****************************************************************************/
+void swap(int **int1, int **int2)
+{
+	int *temp;		//temporary value to store int value
+
+	*temp = **int1;	//set temp to int1
+	**int1 = **int2;	//set int2 into int1
+	**int2 = *temp;	//set temp into int2
+
+}

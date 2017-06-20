@@ -1,0 +1,177 @@
+// Author:       Neda Khakpour
+// Course:       CS-1337-OU1
+// Date:         6/13/2017
+// Assignment:   Lecture Homework #2 Exercise #2
+// Compiler:     Visual Studio C++ 2017
+
+// Description: This program opens the file "Random Perm 2.txt" and reads the data into an array. The data is then run into
+// linear and binary search funtions 1000 times in order to output the average number of linear search comparisons, and
+// maximum number of binary search comparisons.
+
+
+#include "stdafx.h"
+#include <iostream>
+#include <conio.h>
+#include <fstream>
+#include <string>
+#include <iomanip>
+#include <array>
+#include <cstdlib>
+
+using namespace std;
+
+//define array size constant of 999 for 1000 elements
+const int ARRAY_SIZE = 999;
+
+//declare function prototypes
+int linearSearch(int arr[], int size, int value);
+int binarySearch(int arr[], int size, int value);
+
+
+
+int main()
+{
+	//decalring variables
+	int arr[ARRAY_SIZE];
+	int numbers;
+	int i = 0;
+	int value;
+	int sum = 0;
+	int linearVal;
+	int binaryVal;
+	int maximum = 0;
+	double average;
+	string fileName = "Random Perm 2.txt";
+
+
+	//open the file
+	ifstream inFile(fileName);
+
+	if (!inFile)
+	{
+		cout << "Unable to open the file!";
+		return 0;
+	} //if not in the file, end the program with a message "Unable to open the file"
+
+
+	do
+	{
+		inFile >> numbers;
+		arr[i] = numbers;
+		i++;
+	} while (getline(inFile, fileName)); //do while loop. while get next line in the file, put the input into the array and increment the pointer
+
+										 //close the file
+	inFile.close();
+
+	for (int x = 0; x < ARRAY_SIZE; x++)
+	{
+		//random number generation
+		value = rand() % (1000) + 1;
+
+		//call functions
+		linearVal = linearSearch(arr, ARRAY_SIZE, value);
+		binaryVal = binarySearch(arr, ARRAY_SIZE, value);
+
+		//total number of comparisons for linear searches
+		sum = sum + linearVal;
+
+		if (maximum < binaryVal)
+		{
+			maximum = binaryVal;
+		} //condition to check if number is the maximum number of comparisons for binary search
+
+	}//perfrom 1000 linear and binary searches on the data set looking for numbers chosen between 1 and 1000
+
+
+	 //find the average for the comparisons
+	average = sum / 1000;
+
+	//print the output to the console for the user 
+	cout << fixed << setprecision(2) << "Average # of comparisons, 1000 Linear Searches: " << average;
+	cout << "\nMaximum # of comparisons, 1000 Binary Searches: " << maximum;
+
+
+	//prevent console from closing
+	cout << "\n\nPress any key to continue...";
+	_getch();
+
+	return 0;
+}
+
+
+/****************************************************************************
+* Function: int linearSearch(int arr[], int size, int value)
+* Descr: This function will search for 'value' inside of the array using a linear search algorithhm and return the number
+* of comparisons made before 'value' was found
+* Input: int arr[], int size, int values
+* Return: the number the comparisons done during the linear search process
+****************************************************************************/
+int linearSearch(int arr[], int size, int value)
+{
+	int index = 0;			//used as a subscript to search array
+	int position = -1;		//to record position of search value
+	int comparisons = 0;	//to record number of comparisons made during search
+	bool found = false;		//flag to indicate if the value was found
+
+	while (index < size && !found)
+	{
+		//increment comparisons made
+		comparisons++;
+
+		if (arr[index] == value)
+		{
+			found = true;
+			position = index;
+		}// if the value is found, set flag to true, record value subscript
+
+		 //go to next element
+		index++;
+	} //while index is less than size and the flag is false
+
+	  //return number of comparisons made
+	return comparisons;
+}
+
+/****************************************************************************
+* Function: int binarySearch(int arr[], int size, int value)
+* Descr: This function will search for 'value' inside of the array using a binary search algorithhm and return the number
+* of comparisons made before 'value' was found
+* Input: int arr[], int size, int values
+* Return: the number the comparisons done during the binary search process
+****************************************************************************/
+int binarySearch(int arr[], int size, int value)
+{
+	int first = 0;			//first array element
+	int last = size - 1;	//last array element
+	int middle;				//midpoint search
+	int position = -1;		//position of search value
+	int comparisons = 0;	//to record number of comparisons made during search
+	bool found = false;		//flag to indicate if the value was found
+
+	while (!found && first <= last)
+	{
+		//increment comparisons made
+		comparisons++;
+
+		//calculate midpoint
+		middle = (first + last) / 2;
+
+		if (arr[middle] == value)
+		{
+			found = true;
+			position = middle;
+		} //if value is found at midpoint, flag it as found and set position to the middle
+		else if (arr[middle] > value)
+		{
+			last = middle - 1;
+		} //else if value is in the lower half
+		else
+		{
+			first = middle + 1;
+		} //else if the value is in the upper half
+	} ///while first is less than or equal to last and the flag is false
+
+	  //return number of comparisons made
+	return comparisons;
+}

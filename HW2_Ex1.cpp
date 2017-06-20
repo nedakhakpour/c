@@ -6,7 +6,7 @@
 
 // Description:Read data from the file "Random Sort. txt" into an array. The data is then copied into another array, where it
 // will be then sorted through a bubble sort and displayed on the console. The second array is then reset, and displayed on the console,
-// only ro be sorted again through the insertion sort algorithm and displayed.
+// only to be sorted again through the insertion sort algorithm and displayed.
 
 
 #include "stdafx.h"

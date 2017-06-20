@@ -1,0 +1,135 @@
+// Author:       Neda Khakpour
+// Course:       CS-1337-OU1
+// Date:         6/6/2017
+// Assignment:   Lecture Homework #1 Exercise #2
+// Compiler:     Visual Studio C++ 2017
+
+// Desciption:
+// This program reads data from the input file "Random.txt" into an array, printing
+// the data in forward and reverse order from two functions.
+
+
+#include "stdafx.h"
+#include <iostream>
+#include <conio.h>
+#include <fstream>
+#include <string>
+#include <iomanip>
+#include <array>
+
+using namespace std;
+
+const int ARRAY_SIZE = 300;			//set constant global variable value array size to 300
+
+/****************************************************************************
+* Function: printForward (int fileNumbers[])
+* Descr: This function prints out the contents of the passed in array in forward order, 10 numbers per line, each number right justified 
+* in a 5 character field. This is achieved by iterating up (counting up) through the array using a for loop, and using a cout statement 
+* to print out the array at index i. An if statement is called to ensure blank values will not print and will not access uncalled memory. 
+* The cout statement formats the output to the right and in a 5 character field by adding "right" and setw(5). Another if statement is 
+* used to check if the numbers per line, using index i against modulus 10. If i % 10 equals 9, then the 10 numbers per line condition is 
+* met, and a new line is printed. The function returns 0, but the array output is displayed on the console. 
+* Input: fileNumbers array
+* Return: printed array of all of the values
+****************************************************************************/
+int printForward(int fileNumbers[])
+{
+	cout << "Forward Order: " << '\n';
+	for (int i = 0; i <= ARRAY_SIZE; i++)
+	{
+		if (fileNumbers[i] != 0 && i <= ARRAY_SIZE)
+		{
+			cout << right << setw(5) << fileNumbers[i] << " ";
+
+		}
+
+		if ((i % 10) == 9)
+		{
+			cout << endl;
+		}
+	}
+
+	return 0;
+}
+
+
+/****************************************************************************
+* Function: printReverse (int fileNumbers[])
+* Descr: This function prints out the contents of the passed in array in reverse order, 10 numbers per line, each number left justified 
+* in a 5 character field. This is achieved by iterating down (counting down) through the array using a for loop, and using a cout statement 
+* to print out the array at index i. An if statement is called to ensure blank values will not print and will not access uncalled memory. 
+* The cout statement formats the output to the left and in a 5 character field by adding "left" and setw(5). Another if statement is 
+* used to check if the numbers per line, using index i against modulus 10. If i % 10 equals 9, then the 10 numbers per line condition is 
+* met, and a new line is printed. The function returns 0, but the array output is displayed on the console. 
+* Input: inputNumber
+* The binary string input.
+* Return: A string corresponding to the Hex value of the input string.
+****************************************************************************/
+int printReverse(int fileNumbers[])
+{
+	cout << "Reverse Order: " << '\n';
+	for (int i = ARRAY_SIZE; i >= 0; i--)
+	{
+		if (fileNumbers[i] != 0 && i >= 0)
+		{
+			cout << left << setw(5) << fileNumbers[i] << " ";
+
+			if ((i % 10) == 9)
+			{
+				cout << endl;
+			}
+		}
+
+	}
+
+	return 0;
+}
+
+
+
+
+int main()
+{
+
+	//declaring variables
+	int fileNumbers[ARRAY_SIZE];			//array of size 300 (ARRAY_SIZE)
+	int numbers;							//for the storing input
+	int i = 0;								//for the counter
+	string fileName = "Random.txt";			//name of the file 
+
+	//initialize array
+	for (int x = 0; x <= ARRAY_SIZE; x++)
+	{
+		fileNumbers[x] = 0;
+	} //set array to all 0s
+
+	//open the file
+	ifstream inFile(fileName);
+	
+	if (!inFile)
+	{
+		cout << "Unable to open the file!";
+		return 0;
+	} //if not in the file, end the program with a message "Unable to open the file"
+
+
+	do {
+		inFile >> numbers;
+		fileNumbers[i] = numbers;
+		i++;
+	} while (getline(inFile, fileName)); //do while loop. while get next line in the file, put the input into the array and increment the pointer
+
+	//close the file
+	inFile.close();
+
+
+	//call the functions to print in forward and reverse order
+	printForward(fileNumbers);
+	printReverse(fileNumbers);
+
+	//prevent console from closing
+	cout << "\n\nPress any key to continue...";
+	_getch();
+
+	return 0;
+}

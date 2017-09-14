@@ -1,0 +1,261 @@
+// Author:       Neda Khakpour
+// Course:       CS-1337-OU1
+// Date:         7/18/2017
+// Assignment:   Lecture Homework #5 Exercise #1
+// Compiler:     Visual Studio C++ 2017
+
+// Description: The program will create a node structure and initialize the number variable and the nextNode variable. It will then open
+// the file "Perm 50.txt" and read those numbers into the list. The list will have 50 numbers in it. Once the data is read into the linked
+// list, it will close the file and display the list. Then, the program will traverse the list and detect if an odd number is in the list. If
+// so, it will create and insert a node immediately after the node containing the value and add 100. The program will display the list again, then
+// delete the list.
+
+
+#include "stdafx.h"
+#include <iostream>
+#include <conio.h>
+#include <fstream>
+#include <string>
+#include <iomanip>
+#include <array>
+#include <cstdlib>
+
+using namespace std;
+
+//structure definition for Node
+struct Node
+{
+	int number;				//data value for the node
+	Node * nextNode;		//pointer value for the next node
+};
+
+
+//Fuction Prototypes for the node functions
+Node * addNodeToEnd(Node * lastNode, int num);
+void displayList(Node * firstNode);
+int getNumOfElements(Node * firstNode);
+Node * getNodeWithValue(Node * firstNode, int value);
+Node * insertAfter(Node * currNode, int num);
+void deleteList(Node * firstNode);
+
+void main() {
+	//declare structure object (dummy node)
+	Node node;											//node structure object
+	node.number = -1;									//set node number variable to -1
+	node.nextNode = nullptr;							//set next node pointer to nullptr
+	Node * currNode = nullptr;							//set current node pointer to nullptr
+	Node * lastNode = nullptr;							//set last node pointer to nullptr
+	Node headNode = { node.number, node.nextNode };		//initialize head node value to -1, nullptr
+	int count = 0;										//set and initialize int count to 0
+	int addedVal = 0;									//set and initialize int added value to 0
+
+
+														//set the input file name
+	string fileName = "Perm 50.txt";
+
+	//open the file
+	ifstream inFile(fileName);
+
+	if (!inFile)
+	{
+		cout << "Unable to open the file!";
+		exit(0);
+	} //if not in the file, end the program with a message "Unable to open the file"
+
+	do
+	{
+		//set file values to node number variable
+		inFile >> node.number;
+		//create new node
+		currNode = new Node;
+		//call addNodeToEnd and get node values
+		currNode = addNodeToEnd(&headNode, node.number);
+		//set last node to the current node
+		lastNode = currNode;
+
+	} while (getline(inFile, fileName)); /*
+										 * do while loop. while get next line in the file, put the input into the node number variable.
+										 * create new Node currNode and call the addNodeToEnd function that will initialize currNode with
+										 * the value from the file and set nextNode to nullptr. Add the new node to the end of the linked list.
+										 * return the converted value in to the Pig Latin string C-String variable
+										 */
+
+
+										 //close the file
+	inFile.close();
+
+	//call getNumOfElements to get the number of elements in the list, set that as count value
+	count = getNumOfElements(&headNode);
+
+	//call display functions
+	cout << "Original Data:\n";
+	displayList(&headNode);
+
+
+	for (int i = 0; i < count; i++)
+	{
+		if (i % 2 != 0)
+		{
+			addedVal = i + 100;
+			currNode = getNodeWithValue(&headNode, i);
+			currNode = insertAfter(currNode, addedVal);
+
+		} //condition to check if the value of i is not even (odd), if so, add 100 to the value of i, and get node with value i
+		  //insert new node with value of i +100 after the node with the initial odd value	
+
+	} //for loop to interate throgh entire list with the count value
+
+	  //display new list with added values
+		cout << "\nNew Data:\n";
+		displayList(&headNode);
+
+	//delete the list
+	deleteList(&headNode);
+
+
+	//prevent console from closing
+	cout << "\n\nPress any key to continue...";
+	_getch();
+
+}
+
+/****************************************************************************
+* Function: Node * addNodeToEnd(Node * lastNode, int num)
+* Descr: This function will add a node to the end of the list and return a pointer to it. lastNode
+*		 will hold a pointer to the current last node in the list. The new node should be
+*		 dynamically allocated inside the function (which means, of course, that all nodes will
+*		 have to be deleted later) and inserted after lastNode. The variable number should be
+*		 set to num. The nextNode pointer should be set to nullptr.
+* Input: Node * lastNode, int num
+* Return: pointer to last node in the linked list
+****************************************************************************/
+Node * addNodeToEnd(Node * lastNode, int num)
+{
+	Node * temp = new Node;		//create new node temp
+	temp->number = num;			//set new temp node number value to num
+	temp->nextNode = nullptr;	//set link to next node to nullptr
+
+	Node *ptr = lastNode;		//set new ptr node to passed in last node
+
+	if (lastNode == nullptr)
+	{
+		lastNode = temp;
+		return lastNode;
+	} // condition to check if last node is null, then set it to the temp node and return the value
+
+	while (ptr->nextNode != nullptr)
+	{
+		ptr = ptr->nextNode;
+	} // while the next node is not nullptr, then ptr is set to the next node to traverse the list until the end
+
+	ptr->nextNode = temp; //the next node for ptr to temp
+
+	return lastNode; //return the pointer to last node
+}
+
+/****************************************************************************
+* Function: void displayList(Node * firstNode)
+* Descr: This function will display the elements of the list, ten numbers per line, each one in a five
+*		 byte field. It makes no change to the list.
+* Input: Node * firstNode
+* Return: no return/prints the linked list
+****************************************************************************/
+void displayList(Node * firstNode)
+{
+	Node * newPtr = firstNode->nextNode;	 //set new ptr to the next node of the given first node (the dummy node)
+	int counter = 0;						 //set counter to 0			
+
+	while (newPtr != nullptr)
+	{
+		cout << setw(5) << newPtr->number;	//format the output
+		newPtr = newPtr->nextNode;			//set newPtr to the next node
+		counter++;							//increment the counter
+		if (counter % 10 == 0)
+		{
+			cout << endl;
+		} //if the line has line values, end line
+
+	} //while the newPtr is not nullptr, print the linked list
+}
+
+/****************************************************************************
+* Function: int getNumOfElements(Node * firstNode)
+* Descr: This function should traverse the list, count how many elements are in it, and return that
+*		 number. (Note that the end of the list can be detected by the presence of the nullptr
+*		 in the nextNode field of the last element.) You should not count the dummy node at
+*		 the beginning as an element in the list. (If the dummy node is all that is there, then the
+* Input: Node * firstNode
+* Return: int value of the number of elements in the linked list
+****************************************************************************/
+int getNumOfElements(Node * firstNode)
+{
+	int count = -1; //set count to -1
+
+	while (firstNode != nullptr)
+	{
+		count++; //increment count
+		firstNode = firstNode->nextNode; //pass node to next node
+	} //while the node is not nullptr, increment the counter and set the node to next node
+
+	return count; //return the counted elements in the linked list
+}
+
+/****************************************************************************
+* Function: Node * getNodeWithValue(Node * firstNode, int value)
+* Descr: This function should traverse the list and return a pointer to the first element that has the
+*		 value value. If value is not in the list, it should return a nullptr.
+* Input: Node * firstNode, int value
+* Return: the pointer to the node that contained the value passed
+****************************************************************************/
+Node * getNodeWithValue(Node * firstNode, int value)
+{
+	while (firstNode != nullptr)
+	{
+		if (firstNode->number == value)
+		{
+			return firstNode;
+		} //if the value in the node is equal to the passed value, return the node
+
+		firstNode = firstNode->nextNode; //set the node to the next node
+	} //while first node is not nullptr
+
+	return firstNode; //return the pointer to the first node
+}
+
+/****************************************************************************
+* Function: Node * insertAfter(Node * currNode, int num)
+* Descr: This function will insert a new node into the list immediately after the node pointed to by
+*		 currNode. The new node should be dynamically allocated. The function will set the
+*		 number value of the next node to num and return a pointer to the new node. That pointer
+*		 can be used for the next insertion.
+* Input: Node * currNode, int num
+* Return: the pointer to the newly added node
+****************************************************************************/
+Node * insertAfter(Node * currNode, int num)
+{
+	Node * nptr = new Node; //set new node nptr
+
+	nptr->number = num; //set the pointer data value to the passed num
+	nptr->nextNode = currNode->nextNode; //set the next node value to the currNode next node 
+
+	currNode->nextNode = nptr; //insert the currNode next value to point to the nptr node
+
+	return currNode; //return the currNode value
+}
+
+/****************************************************************************
+* Function: void deleteList(Node * firstNode)
+* Descr: This function will traverse the entire list, deleting each element in turn. It is an essential
+*		 cleanup function that you should execute when everything else is done.
+* Input: Node * firstNode
+* Return: no return/deletes the linked list
+****************************************************************************/
+void deleteList(Node * firstNode)
+{
+	if (firstNode == nullptr)
+	{
+		delete firstNode; 
+		firstNode == nullptr;
+	} //if the first node is empty, then we delete the first node that was previously dynamically allocated
+	firstNode = nullptr;
+}

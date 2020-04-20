@@ -1,7 +1,4 @@
 // Author:       Neda Khakpour
-// Course:       CS-1337-OU1
-// Date:         6/13/2017
-// Assignment:   Lecture Homework #2 Exercise #1
 // Compiler:     Visual Studio C++ 2017
 
 // Description:Read data from the file "Random Sort. txt" into an array. The data is then copied into another array, where it

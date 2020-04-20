@@ -1,7 +1,4 @@
 // Author:       Neda Khakpour
-// Course:       CS-1337-OU1
-// Date:         6/20/2017
-// Assignment:   Lecture Homework #3 Exercise #2
 // Compiler:     Visual Studio C++ 2017
 
 // Description:Read data from the file "Random Sort. txt" into a data array. A pointer array is also created and initialized in a way that 

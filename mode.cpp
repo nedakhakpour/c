@@ -1,7 +1,4 @@
 // Author:       Neda Khakpour
-// Course:       CS-1337-OU1
-// Date:         7/11/2017
-// Assignment:   Lecture Homework #4 Exercise #1
 // Compiler:     Visual Studio C++ 2017
 
 // Description: The program will examine the numbers in the input file "RandomModeOneMode.txt" and determine the mode i.e., the element

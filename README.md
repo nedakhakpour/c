@@ -1,2 +1,0 @@
-# cplusplus
-Beginner C++ Programs

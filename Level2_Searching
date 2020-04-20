@@ -1,7 +1,4 @@
 // Author:       Neda Khakpour
-// Course:       CS-1337-OU1
-// Date:         6/13/2017
-// Assignment:   Lecture Homework #2 Exercise #2
 // Compiler:     Visual Studio C++ 2017
 
 // Description: This program opens the file "Random Perm 2.txt" and reads the data into an array. The data is then run into

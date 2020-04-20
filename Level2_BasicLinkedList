@@ -1,7 +1,4 @@
 // Author:       Neda Khakpour
-// Course:       CS-1337-OU1
-// Date:         7/18/2017
-// Assignment:   Lecture Homework #5 Exercise #1
 // Compiler:     Visual Studio C++ 2017
 
 // Description: The program will create a node structure and initialize the number variable and the nextNode variable. It will then open
